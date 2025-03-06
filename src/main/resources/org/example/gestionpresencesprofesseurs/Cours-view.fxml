@@ -1,11 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gestionpresencesprofesseurs.CoursController">
+<AnchorPane prefHeight="400.0" prefWidth="684.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gestionpresencesprofesseurs.CoursController">
    <children>
-      <ComboBox fx:id="combo" layoutX="177.0" layoutY="94.0" prefWidth="150.0" />
+      <ComboBox fx:id="comboSalle" layoutX="5.0" layoutY="285.0" prefWidth="150.0" />
+      <Label layoutX="6.0" layoutY="14.0" text="Nom">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="7.0" layoutY="70.0" text="Heure debut">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="champDebut" layoutX="5.0" layoutY="100.0" promptText="Heure debut" />
+      <Label layoutX="8.0" layoutY="190.0" text="Heure fin">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="champFin" layoutX="5.0" layoutY="222.0" promptText="Heure fin" />
+      <ComboBox fx:id="comboProfesseur" layoutX="5.0" layoutY="355.0" prefWidth="150.0" />
+      <Button layoutX="266.0" layoutY="23.0" mnemonicParsing="false" onAction="#btnAjouter" style="-fx-background-color: transparent; -fx-border-color: #4A90E2; -fx-border-radius: 15; -fx-text-fill: #4A90E2;" text="Ajouter" />
+      <Button layoutX="332.0" layoutY="23.0" mnemonicParsing="false" onAction="#btnSupprimer" style="-fx-background-color: transparent; -fx-border-color: #4A90E2; -fx-border-radius: 15; -fx-text-fill: #4A90E2;" text="Supprimer" />
+      <Button layoutX="411.0" layoutY="24.0" mnemonicParsing="false" onAction="#btnUpdate" style="-fx-background-color: transparent; -fx-border-color: #4A90E2; -fx-border-radius: 15; -fx-text-fill: #4A90E2;" text="Modifier" />
+      <Button layoutX="484.0" layoutY="24.0" mnemonicParsing="false" onAction="#btnAnnuler" style="-fx-background-color: transparent; -fx-border-color: #4A90E2; -fx-border-radius: 15; -fx-text-fill: #4A90E2;" text="Annuler" />
+      <TextField fx:id="champNom" layoutX="5.0" layoutY="42.0" promptText="Nom" />
+      <Label layoutX="6.0" layoutY="255.0" text="Salle">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="1.0" layoutY="322.0" text="Proffesseur">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="7.0" layoutY="128.0" text="Description">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="champDescription" layoutX="5.0" layoutY="158.0" promptText="Description" />
+      <TableView fx:id="tableCours" layoutX="158.0" layoutY="59.0" prefHeight="326.0" prefWidth="529.0">
+        <columns>
+          <TableColumn fx:id="colNumero" prefWidth="68.6666259765625" text="Numero" />
+            <TableColumn fx:id="colNom" prefWidth="82.00007629394531" text="Nom" />
+            <TableColumn fx:id="colDebut" prefWidth="75.0" text="Heure debut" />
+            <TableColumn fx:id="colFin" prefWidth="75.0" text="Heure fin" />
+            <TableColumn fx:id="colDescription" prefWidth="75.0" text="Description" />
+            <TableColumn fx:id="colSalle" prefWidth="75.0" text="Salle" />
+            <TableColumn fx:id="colProfesseur" prefWidth="75.0" text="Professeur" />
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>

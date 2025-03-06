@@ -23,4 +23,79 @@ public class Cours {
     @JoinColumn(name = "professeur_id") //liaison des tables
     private Utilisateur professeur;
     // Getters et Setters
+    public  Long getProfesseurId() {
+        return professeur.getId();
+    }
+    public  String getSalleLibelle() {
+        return salle.getLibelle();
+        }
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalTime getHeureDebut() {
+        return heureDebut;
+    }
+
+    public void setHeureDebut(LocalTime heureDebut) {
+        this.heureDebut = heureDebut;
+    }
+
+    public LocalTime getHeureFin() {
+        return heureFin;
+    }
+
+    public void setHeureFin(LocalTime heureFin) {
+        this.heureFin = heureFin;
+    }
+
+    public Salle getSalle() {
+        return salle;
+    }
+
+    public void setSalle(Salle salle) {
+        this.salle = salle;
+    }
+
+    public Utilisateur getProfesseur() {
+        return professeur;
+    }
+
+    public void setProfesseur(Utilisateur professeur) {
+        this.professeur = professeur;
+    }
+
+    @Override
+    public String toString() {
+        return "Cours{" +
+                "nom='" + nom + '\'' +
+                ", description='" + description + '\'' +
+                ", heureDebut=" + heureDebut +
+                ", heureFin=" + heureFin +
+                ", salle=" + salle +
+                ", professeur=" + professeur +
+                '}';
+    }
 }
