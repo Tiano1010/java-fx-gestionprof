@@ -75,11 +75,16 @@ public class CoursController implements Initializable {
             cours.setSalle(salle);
             cours.setProfesseur(professeur);
 
-            coursRepository.addCours(cours);
-            showAlert(Alert.AlertType.INFORMATION, "Succès", "Cours ajouté avec succès.");
+            // Tentative d'ajout du cours avec gestion des doublons
+            try {
+                coursRepository.addCours(cours);
+                showAlert(Alert.AlertType.INFORMATION, "Succès", "Cours ajouté avec succès.");
+                btnAnnuler(event);
+                afficherCours();
+            } catch (IllegalArgumentException e) {
+                showAlert(Alert.AlertType.WARNING, "Doublon", e.getMessage());
+            }
 
-            btnAnnuler(event);
-            afficherCours();
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Erreur", "Échec de l'ajout du cours.");
@@ -164,7 +169,7 @@ public class CoursController implements Initializable {
         comboSalle.setItems(FXCollections.observableArrayList(salleList));
 
         UtilisateurRepository utilisateurRepository = new UtilisateurRepository();
-        List<Utilisateur> professeursList = utilisateurRepository.getAllUtilisateur(); // Récupère uniquement les professeurs
+        List<Utilisateur> professeursList = utilisateurRepository.getAllUtilisateur();
         ObservableList<Utilisateur> professeursObservableList = FXCollections.observableArrayList(professeursList);
 
         comboProfesseur.setCellFactory(param -> new ListCell<Utilisateur>() {

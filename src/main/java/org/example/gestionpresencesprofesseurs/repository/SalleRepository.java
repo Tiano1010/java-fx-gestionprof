@@ -4,14 +4,28 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.example.gestionpresencesprofesseurs.JpaUtil;
 import org.example.gestionpresencesprofesseurs.model.Salle;
-import org.example.gestionpresencesprofesseurs.model.Utilisateur;
 
 import java.util.List;
 
 public class SalleRepository {
 
+    // Méthode pour vérifier si une salle existe déjà par son libellé
+    public boolean isSalleExist(String libelle) {
+        EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<Salle> sallesExistantes = entityManager.createQuery("SELECT s FROM Salle s WHERE s.libelle = :libelle", Salle.class)
+                .setParameter("libelle", libelle)
+                .getResultList();
+        entityManager.close();
+        return !sallesExistantes.isEmpty(); // retourne vrai si la salle existe déjà
+    }
+
+    // Ajout d'une nouvelle salle après vérification des doublons
     public void addSalle(Salle salle) {
-        //recuperant les informations de l'utilisateur connecté
+        if (isSalleExist(salle.getLibelle())) {
+            throw new IllegalArgumentException("Une salle avec ce libellé existe déjà.");
+        }
+
         EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
@@ -20,17 +34,21 @@ public class SalleRepository {
         entityManager.close();
     }
 
-    public void deleteSalle(Long id){
+    // Suppression d'une salle par son id
+    public void deleteSalle(Long id) {
         EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Salle salle = entityManager.find(Salle.class, id);
-        entityManager.remove(salle);
+        if (salle != null) {
+            entityManager.remove(salle);
+        }
         entityManager.getTransaction().commit();
         entityManager.close();
     }
 
-    public void updateSalle(Salle salle){
+    // Mise à jour d'une salle
+    public void updateSalle(Salle salle) {
         EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
@@ -39,7 +57,8 @@ public class SalleRepository {
         entityManager.close();
     }
 
-    public List<Salle> getAllSalle(){
+    // Récupération de toutes les salles
+    public List<Salle> getAllSalle() {
         EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
