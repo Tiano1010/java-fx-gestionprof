@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gestionpresencesprofesseurs.ProffeseurController">
+   <children>
+      <DatePicker fx:id="cDate" layoutX="21.0" layoutY="63.0" />
+      <Label layoutX="21.0" layoutY="34.0" text="Date" />
+      <ComboBox fx:id="comboStatut" layoutX="425.0" layoutY="63.0" prefWidth="150.0" />
+      <Label layoutX="425.0" layoutY="34.0" text="Statut" />
+      <TableView fx:id="tableEmargement" layoutX="23.0" layoutY="180.0" prefHeight="200.0" prefWidth="544.0">
+        <columns>
+          <TableColumn fx:id="champNumero" prefWidth="75.0" text="Numero" />
+          <TableColumn fx:id="champCours" prefWidth="75.0" text="Cours" />
+            <TableColumn fx:id="champProf" prefWidth="75.0" text="Professeur" />
+            <TableColumn fx:id="champDate" prefWidth="75.0" text="Date" />
+            <TableColumn fx:id="champDebut" prefWidth="75.0" text="Heure debut" />
+            <TableColumn fx:id="champFin" prefWidth="75.0" text="Heure fin" />
+            <TableColumn fx:id="champSignature" prefWidth="75.0" text="Signature" />
+        </columns>
+      </TableView>
+      <Button layoutX="24.0" layoutY="143.0" mnemonicParsing="false" onAction="#btnAjout" text="Ajouter" />
+      <ComboBox fx:id="comboCours" layoutX="208.0" layoutY="63.0" prefWidth="150.0" />
+      <Label layoutX="204.0" layoutY="35.0" text="Cours" />
+   </children>
+</AnchorPane>
