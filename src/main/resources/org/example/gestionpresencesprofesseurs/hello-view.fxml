@@ -2,12 +2,14 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="548.0" prefWidth="891.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gestionpresencesprofesseurs.HelloController">
     <children>
@@ -22,7 +24,7 @@
                     </image>
                 </ImageView>
                 <Pane prefHeight="3.0" prefWidth="233.0" style="-fx-background-color: black;" />
-                <Button alignment="BASELINE_LEFT" graphicTextGap="22.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="233.0" styleClass="buttonMenu" stylesheets="@style.css" text="Accueil">
+                <Button alignment="BASELINE_LEFT" graphicTextGap="22.0" mnemonicParsing="false" onAction="#pageAccueil" prefHeight="37.0" prefWidth="233.0" styleClass="buttonMenu" stylesheets="@style.css" text="Accueil">
                     <opaqueInsets>
                         <Insets />
                     </opaqueInsets>
@@ -135,7 +137,14 @@
                 <DropShadow />
             </effect>
         </VBox>
-        <AnchorPane fx:id="dynamiquePage" layoutX="231.0" layoutY="49.0" prefHeight="504.0" prefWidth="657.0" />
-        <Pane layoutX="221.33333333333334" prefHeight="46.0" prefWidth="671.0" style="-fx-background-color: white;" AnchorPane.leftAnchor="221.0" AnchorPane.rightAnchor="-1.0" />
+        <AnchorPane fx:id="dynamiquePage" layoutX="231.0" layoutY="49.0" prefHeight="504.0" prefWidth="657.0" style="-fx-background-color: skyblue;" />
+        <Pane layoutX="228.0" prefHeight="55.0" prefWidth="664.0" style="-fx-background-color: skyblue;" AnchorPane.leftAnchor="228.0" AnchorPane.rightAnchor="-1.0">
+         <children>
+            <Label layoutX="157.0" layoutY="23.0" prefHeight="37.0" prefWidth="317.0" text="Institut Supérieur d'Informatique" textFill="#f8f6f6" underline="true">
+               <font>
+                  <Font name="Bodoni MT Black" size="17.0" />
+               </font>
+            </Label>
+         </children></Pane>
     </children>
 </AnchorPane>

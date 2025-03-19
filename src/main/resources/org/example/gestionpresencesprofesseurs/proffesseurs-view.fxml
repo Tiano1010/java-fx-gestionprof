@@ -9,13 +9,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: skyblue;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gestionpresencesprofesseurs.EmargementController">
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: skyblue;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gestionpresencesprofesseurs.ProffeseurController">
    <children>
       <DatePicker fx:id="cDate" layoutX="21.0" layoutY="63.0" />
       <Label layoutX="21.0" layoutY="34.0" text="Date" />
       <ComboBox fx:id="comboStatut" layoutX="425.0" layoutY="63.0" prefWidth="150.0" />
       <Label layoutX="425.0" layoutY="34.0" text="Statut" />
-      <TableView fx:id="tableEmargement" layoutX="23.0" layoutY="180.0" prefHeight="200.0" prefWidth="544.0">
+      <TableView fx:id="tableEmargement" layoutX="23.0" layoutY="180.0" prefHeight="200.0" prefWidth="544.0" style="-fx-background-color: white;">
         <columns>
           <TableColumn fx:id="champNumero" prefWidth="75.0" text="Numero" />
           <TableColumn fx:id="champCours" prefWidth="75.0" text="Cours" />
@@ -26,10 +27,11 @@
             <TableColumn fx:id="champSignature" prefWidth="75.0" text="Signature" />
         </columns>
       </TableView>
-      <Button layoutX="23.0" layoutY="131.0" mnemonicParsing="false" onAction="#btnAjout" prefHeight="32.0" prefWidth="87.0" style="-fx-background-color: white;" text="Ajouter" textFill="#0af257">
+      <Button layoutX="23.0" layoutY="128.0" mnemonicParsing="false" onAction="#btnAjout" style="-fx-background-color: white;" text="Ajouter" textFill="#14eb6a">
          <font>
-            <Font size="15.0" />
-         </font></Button>
+            <Font size="14.0" />
+         </font>
+      </Button>
       <ComboBox fx:id="comboCours" layoutX="208.0" layoutY="63.0" prefWidth="150.0" />
       <Label layoutX="204.0" layoutY="35.0" text="Cours" />
    </children>

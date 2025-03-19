@@ -15,7 +15,7 @@
 
 <AnchorPane prefHeight="504.0" prefWidth="657.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gestionpresencesprofesseurs.RegisterController">
    <children>
-      <VBox alignment="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="293.0" prefWidth="635.0" spacing="14.0">
+      <VBox alignment="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="293.0" prefWidth="635.0" spacing="14.0" style="-fx-background-color: skyblue;">
          <children>
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
@@ -48,7 +48,7 @@
                   <ComboBox fx:id="combo" prefWidth="150.0" promptText="Profil" style="-fx-background-color: #F0F0F0; -fx-background-radius: 15; -fx-padding: 5;" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: skyblueu;">
                <children>
                   <ImageView fitHeight="29.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -94,7 +94,7 @@
             </HBox>
          </children>
       </VBox>
-      <TableView fx:id="table" layoutX="5.0" layoutY="299.0" onMouseClicked="#charge" prefHeight="200.0" prefWidth="647.0">
+      <TableView fx:id="table" layoutX="5.0" layoutY="299.0" onMouseClicked="#charge" prefHeight="200.0" prefWidth="647.0" style="-fx-background-color: white;">
         <columns>
           <TableColumn fx:id="colNom" prefWidth="153.33334875106812" text="Nom" />
           <TableColumn fx:id="colPrenom" prefWidth="177.99998474121094" text="Prenom" />

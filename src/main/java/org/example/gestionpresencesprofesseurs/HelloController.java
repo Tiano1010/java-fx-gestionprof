@@ -20,6 +20,22 @@ public class HelloController implements Initializable {
     @FXML
     private AnchorPane dynamiquePage;
 
+
+    @FXML
+    void pageAccueil(ActionEvent event) throws IOException{
+        Utilisateur loggedInUser = UserSession.getInstance().getLoggedInUser();
+        if (loggedInUser.getRole().equals("admin")) {
+            Parent fxml = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
+            dynamiquePage.getChildren().removeAll();
+            dynamiquePage.getChildren().setAll(fxml);
+        } else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Accès refusé");
+            alert.setHeaderText("Vous n'avez pas les droits nécessaires pour accéder à cette page");
+            alert.showAndWait();
+        }
+    }
+
     @FXML
     void pageUtilisateur(ActionEvent event) throws Exception {
         Utilisateur loggedInUser = UserSession.getInstance().getLoggedInUser();
@@ -70,7 +86,17 @@ public class HelloController implements Initializable {
 
     @FXML
     void pageProffesseur(ActionEvent event) throws IOException{
-
+        Utilisateur loggedInUser = UserSession.getInstance().getLoggedInUser();
+        if (loggedInUser.getRole().equals("admin") || loggedInUser.getRole().equals("gestionnaire")) {
+            Parent fxml = FXMLLoader.load(getClass().getResource("emargement-view.fxml"));
+            dynamiquePage.getChildren().removeAll();
+            dynamiquePage.getChildren().setAll(fxml);
+        } else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Accès refusé");
+            alert.setHeaderText("Vous n'avez pas les droits nécessaires pour accéder à cette page");
+            alert.showAndWait();
+        }
     }
 
     @FXML
@@ -92,6 +118,22 @@ public class HelloController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        Utilisateur loggedInUser = UserSession.getInstance().getLoggedInUser();
+        if (loggedInUser != null) {
+            // Vous pouvez maintenant utiliser les informations de l'utilisateur connecté
+            System.out.println("Utilisateur connecté: " + loggedInUser);
+        } else {
+            // Gestion de l'absence d'utilisateur connecté
+            System.out.println("Aucun utilisateur connecté");
+        }
+        if(loggedInUser.getRole().equals("admin")) {
+            try {
+                Parent fxml = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
+                dynamiquePage.getChildren().removeAll();
+                dynamiquePage.getChildren().setAll(fxml);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

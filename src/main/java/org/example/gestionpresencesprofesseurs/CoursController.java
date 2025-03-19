@@ -78,6 +78,16 @@ public class CoursController implements Initializable {
             // Tentative d'ajout du cours avec gestion des doublons
             try {
                 coursRepository.addCours(cours);
+                // Exécuter l'envoi d'email dans un thread séparé
+                String recipient = cours.getProfesseur().getEmail(); // Assurez-vous que l'email de l'utilisateur est disponible
+                String subject = "Attribution de cours";
+                String content = "Bonjour " + cours.getProfesseur().getPrenom() + " " + cours.getProfesseur().getNom() + ",\n\n" +
+                        "Vous avez un cours:\n" +
+                        "Matiere: " + cours.getNom()+ "\n" +
+                        "heure: " + cours.getHeureDebut()+"-"+ cours.getHeureFin() +"\n" +
+                        "Salle: " + cours.getSalle() + "\n" +
+                        "Merci bonne reception";
+                EmailSender.sendEmail(recipient, subject, content);
                 showAlert(Alert.AlertType.INFORMATION, "Succès", "Cours ajouté avec succès.");
                 btnAnnuler(event);
                 afficherCours();

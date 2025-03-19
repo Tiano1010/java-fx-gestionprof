@@ -89,13 +89,7 @@ public class Cours {
 
     @Override
     public String toString() {
-        return "Cours{" +
-                "nom='" + nom + '\'' +
-                ", description='" + description + '\'' +
-                ", heureDebut=" + heureDebut +
-                ", heureFin=" + heureFin +
-                ", salle=" + salle +
-                ", professeur=" + professeur +
-                '}';
+        return
+               nom +  "-" +heureDebut +  "H-" +heureFin + "H-" + professeur;
     }
 }
