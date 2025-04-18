@@ -21,34 +21,20 @@ import java.util.ResourceBundle;
 
 public class CoursController implements Initializable {
 
-    @FXML
-    private ComboBox<Salle> comboSalle;
-    @FXML
-    private ComboBox<Utilisateur> comboProfesseur;
-    @FXML
-    private TextField champNom;
-    @FXML
-    private TextField champDescription;
-    @FXML
-    private TextField champDebut;
-    @FXML
-    private TextField champFin;
-    @FXML
-    private TableView<Cours> tableCours;
-    @FXML
-    private TableColumn<Cours, Long> colNumero;
-    @FXML
-    private TableColumn<Cours, String> colNom;
-    @FXML
-    private TableColumn<Cours, String> colDescription;
-    @FXML
-    private TableColumn<Cours, String> colDebut;
-    @FXML
-    private TableColumn<Cours, String> colFin;
-    @FXML
-    private TableColumn<Cours, String> colSalle;
-    @FXML
-    private TableColumn<Cours, String> colProfesseur;
+    @FXML private ComboBox<Salle> comboSalle;
+    @FXML private ComboBox<Utilisateur> comboProfesseur;
+    @FXML private TextField champNom;
+    @FXML private TextField champDescription;
+    @FXML private TextField champDebut;
+    @FXML private TextField champFin;
+    @FXML private TableView<Cours> tableCours;
+    @FXML private TableColumn<Cours, Long> colNumero;
+    @FXML private TableColumn<Cours, String> colNom;
+    @FXML private TableColumn<Cours, String> colDescription;
+    @FXML private TableColumn<Cours, String> colDebut;
+    @FXML private TableColumn<Cours, String> colFin;
+    @FXML private TableColumn<Cours, String> colSalle;
+    @FXML private TableColumn<Cours, String> colProfesseur;
 
     private final CoursRepository coursRepository = new CoursRepository();
 
@@ -75,19 +61,21 @@ public class CoursController implements Initializable {
             cours.setSalle(salle);
             cours.setProfesseur(professeur);
 
-            // Tentative d'ajout du cours avec gestion des doublons
+            // Enregistrement du cours
             try {
                 coursRepository.addCours(cours);
-                // Exécuter l'envoi d'email dans un thread séparé
-                String recipient = cours.getProfesseur().getEmail(); // Assurez-vous que l'email de l'utilisateur est disponible
+
+                // Envoi de mail au professeur
+                String recipient = professeur.getEmail();
                 String subject = "Attribution de cours";
-                String content = "Bonjour " + cours.getProfesseur().getPrenom() + " " + cours.getProfesseur().getNom() + ",\n\n" +
+                String content = "Bonjour " + professeur.getPrenom() + " " + professeur.getNom() + ",\n\n" +
                         "Vous avez un cours:\n" +
-                        "Matiere: " + cours.getNom()+ "\n" +
-                        "heure: " + cours.getHeureDebut()+"-"+ cours.getHeureFin() +"\n" +
-                        "Salle: " + cours.getSalle() + "\n" +
-                        "Merci bonne reception";
+                        "Matière: " + cours.getNom() + "\n" +
+                        "Heure: " + cours.getHeureDebut() + " - " + cours.getHeureFin() + "\n" +
+                        "Salle: " + salle + "\n\n" +
+                        "Merci, bonne réception.";
                 EmailSender.sendEmail(recipient, subject, content);
+
                 showAlert(Alert.AlertType.INFORMATION, "Succès", "Cours ajouté avec succès.");
                 btnAnnuler(event);
                 afficherCours();
@@ -174,10 +162,12 @@ public class CoursController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Remplir comboBox des salles
         SalleRepository salleRepository = new SalleRepository();
         List<Salle> salleList = salleRepository.getAllSalle();
         comboSalle.setItems(FXCollections.observableArrayList(salleList));
 
+        // Remplir comboBox des professeurs
         UtilisateurRepository utilisateurRepository = new UtilisateurRepository();
         List<Utilisateur> professeursList = utilisateurRepository.getAllUtilisateur();
         ObservableList<Utilisateur> professeursObservableList = FXCollections.observableArrayList(professeursList);
@@ -186,16 +176,13 @@ public class CoursController implements Initializable {
             @Override
             protected void updateItem(Utilisateur item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item != null) {
-                    setText(item.getNom() + " " + item.getPrenom());
-                } else {
-                    setText(null);
-                }
+                setText((item == null || empty) ? null : item.getNom() + " " + item.getPrenom());
             }
         });
 
         comboProfesseur.setItems(professeursObservableList);
 
+        // Affichage initial des cours
         afficherCours();
     }
 

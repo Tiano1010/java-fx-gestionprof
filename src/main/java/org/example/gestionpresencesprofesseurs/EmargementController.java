@@ -11,11 +11,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.gestionpresencesprofesseurs.model.Cours;
 import org.example.gestionpresencesprofesseurs.model.Emargement;
-import org.example.gestionpresencesprofesseurs.model.Salle;
-import org.example.gestionpresencesprofesseurs.model.Utilisateur;
 import org.example.gestionpresencesprofesseurs.repository.CoursRepository;
 import org.example.gestionpresencesprofesseurs.repository.EmargementRepository;
-import org.example.gestionpresencesprofesseurs.repository.SalleRepository;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -43,7 +40,7 @@ public class EmargementController implements Initializable {
     private TableColumn<Emargement, String> champNumero;
 
     @FXML
-    private TableColumn<Emargement, String>champProf;
+    private TableColumn<Emargement, String> champProf;
 
     @FXML
     private TableColumn<Emargement, String> champSignature;
@@ -52,39 +49,50 @@ public class EmargementController implements Initializable {
     private ComboBox<Cours> comboCours;
 
     @FXML
-    private ComboBox<?> comboStatut;
+    private ComboBox<String> comboStatut;
 
     @FXML
     private TableView<Emargement> tableEmargement;
 
     @FXML
     void btnAjout(ActionEvent event) {
-
-        String date = cDate.getValue().toString();
+        String date = (cDate.getValue() != null) ? cDate.getValue().toString() : null;
         Cours cours = comboCours.getValue();
-        String statut = comboStatut.getValue().toString();
+        String statut = comboStatut.getValue();
+
+        if (date == null || cours == null || statut == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Champs manquants");
+            alert.setHeaderText(null);
+            alert.setContentText("Veuillez remplir tous les champs.");
+            alert.showAndWait();
+            return;
+        }
+
         EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
         EmargementRepository emargementRepository = new EmargementRepository();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
+
         try {
             Emargement emargement = new Emargement();
             emargement.setDate(LocalDate.parse(date));
-            if (emargement.getDate() != null && emargement.getDate().isEqual(LocalDate.now())){
-                // emargement.setDate(LocalDate.parse(date));
+            if (emargement.getDate() != null && emargement.getDate().isEqual(LocalDate.now())) {
                 emargement.setStatut(statut);
                 emargement.setCours(cours);
                 emargementRepository.addEmargement(emargement);
-            }else {
+            } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Erreur");
-                alert.setContentText("la date est invalide !.");
+                alert.setHeaderText(null);
+                alert.setContentText("La date est invalide !");
                 alert.showAndWait();
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } finally {
             entityManager.close();
         }
+
         afficherEmargement();
         cDate.setValue(null);
         comboCours.setValue(null);
@@ -95,16 +103,19 @@ public class EmargementController implements Initializable {
         EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EmargementRepository emargementRepository = new EmargementRepository();
+
         try {
             List<Emargement> emargements = emargementRepository.getAllEmargements();
             ObservableList<Emargement> res = FXCollections.observableArrayList(emargements);
+
             champNumero.setCellValueFactory(new PropertyValueFactory<>("id"));
             champCours.setCellValueFactory(new PropertyValueFactory<>("coursNom"));
             champProf.setCellValueFactory(new PropertyValueFactory<>("CourProfesseur"));
             champDate.setCellValueFactory(new PropertyValueFactory<>("date"));
             champDebut.setCellValueFactory(new PropertyValueFactory<>("coursHeureDebut"));
-            champFin.setCellValueFactory(new PropertyValueFactory<>("coursHeureDebut"));
+            champFin.setCellValueFactory(new PropertyValueFactory<>("coursHeureFin"));
             champSignature.setCellValueFactory(new PropertyValueFactory<>("statut"));
+
             tableEmargement.setItems(res);
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
@@ -113,19 +124,15 @@ public class EmargementController implements Initializable {
         }
     }
 
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         afficherEmargement();
+
         CoursRepository coursRepository = new CoursRepository();
         List<Cours> coursList = coursRepository.getAllCours();
         comboCours.setItems(FXCollections.observableArrayList(coursList));
 
-
-        ObservableList items = comboStatut.getItems();
-        items.add("Present");
-        items.add("Absent");
-        items.add("Retard");
+        ObservableList<String> items = FXCollections.observableArrayList("Present", "Absent", "Retard");
+        comboStatut.setItems(items);
     }
 }

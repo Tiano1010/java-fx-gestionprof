@@ -1,7 +1,5 @@
 package org.example.gestionpresencesprofesseurs;
 
-import org.example.gestionpresencesprofesseurs.model.Utilisateur;
-import org.example.gestionpresencesprofesseurs.repository.UtilisateurRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
@@ -13,14 +11,19 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.example.gestionpresencesprofesseurs.model.Utilisateur;
+import org.example.gestionpresencesprofesseurs.repository.UtilisateurRepository;
 
 import java.io.IOException;
 
 public class LoginController {
+
     @FXML
     private TextField champLogin;
+
     @FXML
     private PasswordField champMdp;
+
     private String login;
     private String password;
 
@@ -41,8 +44,8 @@ public class LoginController {
             alert.showAndWait();
         } else {
             Utilisateur utilisateur = utilisateurRepository.getconn(login, password);
-            if(utilisateur != null){
-                //garder la session
+            if (utilisateur != null) {
+                // Garder la session
                 UserSession.getInstance().setLoggedInUser(utilisateur);
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -56,6 +59,8 @@ public class LoginController {
                 Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
                 stage.setTitle("Accueil");
                 stage.setScene(scene);
+                stage.setResizable(false); // Empêche le redimensionnement
+                stage.centerOnScreen();    // Centre la fenêtre
                 stage.show();
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -64,6 +69,7 @@ public class LoginController {
                 alert.setContentText("Login ou mot de passe incorrect");
                 alert.showAndWait();
             }
+
             entityManager.close();
             champLogin.setText("");
             champMdp.setText("");
@@ -77,7 +83,8 @@ public class LoginController {
         Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         stage.setTitle("Register");
         stage.setScene(scene);
+        stage.setResizable(false); // Empêche le redimensionnement
+        stage.centerOnScreen();    // Centre la fenêtre
         stage.show();
     }
 }
-

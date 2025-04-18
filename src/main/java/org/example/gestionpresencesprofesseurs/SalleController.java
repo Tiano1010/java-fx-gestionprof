@@ -1,22 +1,17 @@
 package org.example.gestionpresencesprofesseurs;
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import org.example.gestionpresencesprofesseurs.model.Salle;
 import org.example.gestionpresencesprofesseurs.model.Utilisateur;
 import org.example.gestionpresencesprofesseurs.repository.SalleRepository;
-import org.example.gestionpresencesprofesseurs.repository.UtilisateurRepository;
 
 import java.net.URL;
 import java.util.List;
@@ -28,176 +23,141 @@ public class SalleController implements Initializable {
     private TextField champLibelle;
 
     @FXML
-    private TableColumn<?, ?> colId;
+    private TableColumn<Salle, Long> colId;
+
+    @FXML
+    private TableColumn<Salle, String> colLibelle;
+
     @FXML
     private TableView<Salle> table;
-    @FXML
-    private TableColumn<?, ?> colLibelle;
+
+    private final SalleRepository salleRepository = new SalleRepository();
+
     @FXML
     void btnAjouter(ActionEvent event) {
-        String libelle = champLibelle.getText();
-        EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
-         SalleRepository salleRepository = new SalleRepository();
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        String libelle = champLibelle.getText().trim();
+
+        if (libelle.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le champ libellé est vide.");
+            return;
+        }
+
         try {
             Salle salle = new Salle();
             salle.setLibelle(libelle);
             salleRepository.addSalle(salle);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Validation");
-            alert.setHeaderText(null);
-            alert.setContentText("Enreistrement reussi");
-            alert.showAndWait();
 
-//            Parent fxml= FXMLLoader.load(getClass().getResource("login-view.fxml"));
-//            Scene scene = new Scene(fxml);
-//            Stage stage=(Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-//            stage.setTitle("Connexion");
-//            stage.setScene(scene);
-//            stage.show();
+            showAlert(Alert.AlertType.INFORMATION, "Validation", "Enregistrement réussi");
+            champLibelle.clear();
+            afficherSalle();
         } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText(null);
-            alert.setContentText("Enregistrement echoué");
-            alert.showAndWait();
-        } finally {
-            entityManager.close();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Enregistrement échoué");
         }
-        btnAnnuler(event);
-        afficherSalle();
     }
-
 
     @FXML
     void btnAnnuler(ActionEvent event) {
-       champLibelle.clear();
+        champLibelle.clear();
+        table.getSelectionModel().clearSelection();
     }
 
     @FXML
     void btnSupprimer(ActionEvent event) {
         Utilisateur loggedInUser = UserSession.getInstance().getLoggedInUser();
-        if(loggedInUser.getRole().equals("admin") || loggedInUser.getRole().equals("gestionnaire")) {
-            Long id = table.getSelectionModel().getSelectedItem().getId();
-            EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            SalleRepository salleRepository= new SalleRepository();
-            try {
-                salleRepository.deleteSalle(id);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                entityManager.close();
-            }
-        }else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Accès refusé");
-            alert.setHeaderText("Vous n'avez pas les droits nécessaires pour effectuer cette action");
-            alert.showAndWait();
+
+        if (!hasAccess(loggedInUser)) return;
+
+        Salle selectedSalle = table.getSelectionModel().getSelectedItem();
+        if (selectedSalle == null) {
+            showAlert(Alert.AlertType.WARNING, "Suppression", "Veuillez sélectionner une salle.");
+            return;
         }
-        afficherSalle();
+
+        try {
+            salleRepository.deleteSalle(selectedSalle.getId());
+            afficherSalle();
+            champLibelle.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Suppression échouée");
+        }
     }
 
     @FXML
     void btnUpdate(ActionEvent event) {
         Utilisateur loggedInUser = UserSession.getInstance().getLoggedInUser();
-        if(loggedInUser.getRole().equals("admin") || loggedInUser.getRole().equals("gestionnaire")) {
-            Long id = table.getSelectionModel().getSelectedItem().getId();
-            String libelle = champLibelle.getText();
-            EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            SalleRepository salleRepository = new SalleRepository();
-            try {
-                Salle salle = new Salle();
-                salle.setId(id);
-                salle.setLibelle(libelle);
-                salleRepository.updateSalle(salle);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                entityManager.close();
-            }
-            btnAnnuler(event);
-        }else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Accès refusé");
-            alert.setHeaderText("Vous n'avez pas les droits nécessaires pour effectuer cette action");
-            alert.showAndWait();
+
+        if (!hasAccess(loggedInUser)) return;
+
+        Salle selectedSalle = table.getSelectionModel().getSelectedItem();
+        if (selectedSalle == null) {
+            showAlert(Alert.AlertType.WARNING, "Mise à jour", "Veuillez sélectionner une salle.");
+            return;
         }
-        afficherSalle();
-        btnAnnuler(event);
-    }
-    public void afficherSalle() {
-        EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        SalleRepository sallerepository = new SalleRepository();
+
+        String libelle = champLibelle.getText().trim();
+        if (libelle.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le champ libellé est vide.");
+            return;
+        }
+
         try {
-            List<Salle> salles = sallerepository.getAllSalle();
-            ObservableList<Salle> res = FXCollections.observableArrayList(salles);
-            colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-            colLibelle.setCellValueFactory(new PropertyValueFactory<>("libelle"));
-            table.setItems(res);
+            Salle salle = new Salle();
+            salle.setId(selectedSalle.getId());
+            salle.setLibelle(libelle);
+            salleRepository.updateSalle(salle);
+
+            showAlert(Alert.AlertType.INFORMATION, "Mise à jour", "Salle mise à jour avec succès");
+            champLibelle.clear();
+            afficherSalle();
         } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-        } finally {
-            entityManager.close();
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Mise à jour échouée");
         }
     }
 
     @FXML
     void charge(MouseEvent event) {
-        if(event.getClickCount() == 2){
-            Salle salle= (Salle) table.getSelectionModel().getSelectedItem();
-            champLibelle.setText(salle.getLibelle());
-        };
+        if (event.getClickCount() == 2) {
+            Salle salle = table.getSelectionModel().getSelectedItem();
+            if (salle != null) {
+                champLibelle.setText(salle.getLibelle());
+            }
+        }
     }
+
+    public void afficherSalle() {
+        try {
+            List<Salle> salles = salleRepository.getAllSalle();
+            ObservableList<Salle> res = FXCollections.observableArrayList(salles);
+            colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+            colLibelle.setCellValueFactory(new PropertyValueFactory<>("libelle"));
+            table.setItems(res);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'afficher les salles");
+        }
+    }
+
+    private boolean hasAccess(Utilisateur user) {
+        if (user == null || (!user.getRole().equals("admin") && !user.getRole().equals("gestionnaire"))) {
+            showAlert(Alert.AlertType.ERROR, "Accès refusé", "Vous n'avez pas les droits nécessaires pour effectuer cette action");
+            return false;
+        }
+        return true;
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-       afficherSalle();
+        afficherSalle();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

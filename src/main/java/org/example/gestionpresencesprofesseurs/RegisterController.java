@@ -1,25 +1,24 @@
 package org.example.gestionpresencesprofesseurs;
 
-
 import javafx.collections.FXCollections;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import org.example.gestionpresencesprofesseurs.model.Utilisateur;
-import org.example.gestionpresencesprofesseurs.repository.UtilisateurRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import org.example.gestionpresencesprofesseurs.model.Utilisateur;
+import org.example.gestionpresencesprofesseurs.repository.UtilisateurRepository;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class RegisterController implements Initializable {
+
     @FXML
     private TextField champEmail;
 
@@ -56,15 +55,15 @@ public class RegisterController implements Initializable {
     @FXML
     private TableView<Utilisateur> table;
 
-//    @FXML
-//    void btnAnnuler(ActionEvent event) throws IOException {
-//        Parent fxml= FXMLLoader.load(getClass().getResource("login-view.fxml"));
-//        Scene scene = new Scene(fxml);
-//        Stage stage=(Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-//        stage.setTitle("Connexion");
-//        stage.setScene(scene);
-//        stage.show();
-//    }
+    //    @FXML
+    //    void btnAnnuler(ActionEvent event) throws IOException {
+    //        Parent fxml= FXMLLoader.load(getClass().getResource("login-view.fxml"));
+    //        Scene scene = new Scene(fxml);
+    //        Stage stage=(Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+    //        stage.setTitle("Connexion");
+    //        stage.setScene(scene);
+    //        stage.show();
+    //    }
 
     @FXML
     void btnValider(ActionEvent event) {
@@ -91,12 +90,12 @@ public class RegisterController implements Initializable {
             alert.setContentText("Enreistrement reussi");
             alert.showAndWait();
 
-//            Parent fxml= FXMLLoader.load(getClass().getResource("login-view.fxml"));
-//            Scene scene = new Scene(fxml);
-//            Stage stage=(Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-//            stage.setTitle("Connexion");
-//            stage.setScene(scene);
-//            stage.show();
+            //            Parent fxml= FXMLLoader.load(getClass().getResource("login-view.fxml"));
+            //            Scene scene = new Scene(fxml);
+            //            Stage stage=(Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            //            stage.setTitle("Connexion");
+            //            stage.setScene(scene);
+            //            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -112,11 +111,12 @@ public class RegisterController implements Initializable {
         champNom.setText("");
         champPrenom.setText("");
     }
-    // Envoyer un email après avoir enregistré la réservation
+
+    // Envoyer un email après avoir enregistré un cours
     @FXML
     void btnDelete(ActionEvent event) {
         Utilisateur loggedInUser = UserSession.getInstance().getLoggedInUser();
-        if(loggedInUser.getRole().equals("admin")) {
+        if (loggedInUser.getRole().equals("admin")) {
             Long id = table.getSelectionModel().getSelectedItem().getId();
             EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
             EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -129,23 +129,25 @@ public class RegisterController implements Initializable {
                 entityManager.close();
             }
             afficherUtilisateur();
-        }else {
+        } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Accès refusé");
             alert.setHeaderText("Vous n'avez pas les droits nécessaires pour effectuer cette action");
             alert.showAndWait();
         }
     }
+
     @FXML
     void btnAnnuler(ActionEvent event) {
         champNom.clear();
         champPrenom.clear();
         champEmail.clear();
     }
+
     @FXML
     void btnUpdate(ActionEvent event) {
         Utilisateur loggedInUser = UserSession.getInstance().getLoggedInUser();
-        if(loggedInUser.getRole().equals("admin")) {
+        if (loggedInUser.getRole().equals("admin")) {
             Long id = table.getSelectionModel().getSelectedItem().getId();
             String nom = champNom.getText();
             String prenom = champPrenom.getText();
@@ -167,22 +169,24 @@ public class RegisterController implements Initializable {
             }
             btnAnnuler(event);
             afficherUtilisateur();
-        }else {
+        } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Accès refusé");
             alert.setHeaderText("Vous n'avez pas les droits nécessaires pour effectuer cette action");
             alert.showAndWait();
         }
     }
+
     @FXML
     void charge(MouseEvent event) {
-        if(event.getClickCount() == 2){
+        if (event.getClickCount() == 2) {
             Utilisateur utilisateur = table.getSelectionModel().getSelectedItem();
             champNom.setText(utilisateur.getNom());
             champPrenom.setText(utilisateur.getPrenom());
             champEmail.setText(utilisateur.getEmail());
-        };
+        }
     }
+
     public void afficherUtilisateur() {
         EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -210,6 +214,5 @@ public class RegisterController implements Initializable {
         items.add("professeur");
         items.add("gestionnaire");
         //items.add("admin");
-
     }
 }
